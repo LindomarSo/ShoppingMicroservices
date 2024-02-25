@@ -1,21 +1,20 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using GeekShopping.Web.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication;
+using GeekShopping.Web.Services.Interfaces;
 
 namespace GeekShopping.Web.Controllers;
 
-public class HomeController : Controller
+public class HomeController(IProductService productService) : Controller
 {
-    private readonly ILogger<HomeController> _logger;
-
-    public HomeController(ILogger<HomeController> logger)
+    public async Task<IActionResult> IndexAsync()
     {
-        _logger = logger;
-    }
+        var accessToken = await HttpContext.GetTokenAsync("access_token");
+        var products = await productService.FindAll(accessToken!);
 
-    public IActionResult Index()
-    {
-        return View();
+        return View(products);
     }
 
     public IActionResult Privacy()
@@ -27,5 +26,17 @@ public class HomeController : Controller
     public IActionResult Error()
     {
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+    }
+
+    [Authorize]
+    public async Task<IActionResult> Login()
+    {
+        var accessToken = await HttpContext.GetTokenAsync("access_token");
+        return RedirectToAction(nameof(IndexAsync));
+    }
+
+    public IActionResult Logout()
+    {
+        return SignOut("Cookies", "oidc");
     }
 }
