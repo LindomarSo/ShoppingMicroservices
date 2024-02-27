@@ -18,7 +18,6 @@ public class ProductController : ControllerBase
     }
 
     [HttpGet("find-all")]
-    [Authorize]
     public async Task<ActionResult<IEnumerable<ProductDto>>> FindAll(CancellationToken cancellation)
         => Ok(await _repository.FindAll(cancellation));
 

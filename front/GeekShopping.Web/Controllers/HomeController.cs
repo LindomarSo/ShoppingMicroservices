@@ -9,17 +9,19 @@ namespace GeekShopping.Web.Controllers;
 
 public class HomeController(IProductService productService) : Controller
 {
-    public async Task<IActionResult> IndexAsync()
+    public async Task<IActionResult> Index()
     {
-        var accessToken = await HttpContext.GetTokenAsync("access_token");
-        var products = await productService.FindAll(accessToken!);
+        var products = await productService.FindAll(string.Empty);
 
         return View(products);
     }
 
-    public IActionResult Privacy()
+    [Authorize]
+    public async Task<IActionResult> Details(int id)
     {
-        return View();
+        var token = await HttpContext.GetTokenAsync("access_token");
+        var product = await productService.FindById(id, token!);
+        return View(product);
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
@@ -32,7 +34,7 @@ public class HomeController(IProductService productService) : Controller
     public async Task<IActionResult> Login()
     {
         var accessToken = await HttpContext.GetTokenAsync("access_token");
-        return RedirectToAction(nameof(IndexAsync));
+        return RedirectToAction(nameof(Index));
     }
 
     public IActionResult Logout()
