@@ -1,6 +1,6 @@
-﻿using GeekShopping.Web.Models;
-using GeekShopping.Web.Services.Interfaces;
+﻿using GeekShopping.Web.Services.Interfaces;
 using GeekShopping.Web.Utils;
+using GeekShopping.Web.ViewModels;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

@@ -33,4 +33,40 @@ public class CartController(ICartRepository cartRepository) : ControllerBase
     {
         return Ok(await cartRepository.RemoveFromCartAsync(id));
     }
+
+    [HttpPost("apply-coupon")]
+    public async Task<ActionResult<bool>> ApplyCouponAsync(CartDto cart, CancellationToken cancellationToken)
+    {
+        if (cart is { CartHeader: null } || string.IsNullOrEmpty(cart?.CartHeader?.CouponCode))
+            return BadRequest();
+
+        var status = await cartRepository.ApplyCouponAsync(cart.CartHeader.UserId, cart.CartHeader.CouponCode, cancellationToken);
+
+        if (status)
+            return Ok(status);
+
+        return NotFound();
+    }
+
+    [HttpDelete("remove-coupon/{userId}")]
+    public async Task<ActionResult<bool>> RemoveCouponAsync(string userId, CancellationToken cancellationToken)
+    {
+        var status = await cartRepository.RemoveCouponAsync(userId, cancellationToken);
+
+        if (status)
+            return Ok(status);
+
+        return NotFound();
+    }
+
+    [HttpPost("checkout")]
+    public async Task<ActionResult<bool>> CheckoutAsync(CancellationToken cancellationToken)
+    {
+        var status = await cartRepository.RemoveCouponAsync(userId, cancellationToken);
+
+        if (status)
+            return Ok(status);
+
+        return NotFound();
+    }
 }

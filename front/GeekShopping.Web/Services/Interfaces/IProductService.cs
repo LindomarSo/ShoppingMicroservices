@@ -1,4 +1,4 @@
-﻿using GeekShopping.Web.Models;
+﻿using GeekShopping.Web.ViewModels;
 
 namespace GeekShopping.Web.Services.Interfaces;
 

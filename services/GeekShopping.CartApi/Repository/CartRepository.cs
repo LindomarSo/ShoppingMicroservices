@@ -8,9 +8,19 @@ namespace GeekShopping.CartApi.Repository;
 
 public class CartRepository(MySQLContext context, IMapper mapper) : ICartRepository
 {
-    public async Task<bool> ApplyCouponAsync(string userId, string couponCode)
+    public async Task<bool> ApplyCouponAsync(string userId, string couponCode, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        var cartHeader = await context.CartHeaders.FirstOrDefaultAsync(d => d.UserId == userId, cancellationToken);
+        if (cartHeader != null)
+        {
+            await context.CartHeaders
+                            .AsNoTracking()
+                            .Where(d => d.Id == cartHeader.Id)
+                            .ExecuteUpdateAsync(setters => setters.SetProperty(c => c.CouponCode, couponCode), cancellationToken);
+            return true;
+        }
+
+        return false;
     }
 
     public async Task<bool> ClearCartAsync(string userId)
@@ -22,7 +32,6 @@ public class CartRepository(MySQLContext context, IMapper mapper) : ICartReposit
                             .AsNoTracking()
                             .Where(d => d.CartHeaderId == cartHeader.Id)
                             .ExecuteDeleteAsync();
-            await context.SaveChangesAsync();
             return true;
         }
 
@@ -48,9 +57,19 @@ public class CartRepository(MySQLContext context, IMapper mapper) : ICartReposit
         return mapper.Map<CartDto>(cart);
     }
 
-    public async Task<bool> RemoveCouponAsync(string userId)
+    public async Task<bool> RemoveCouponAsync(string userId, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        var cartHeader = await context.CartHeaders.FirstOrDefaultAsync(d => d.UserId == userId, cancellationToken);
+        if (cartHeader != null)
+        {
+            await context.CartHeaders
+                            .AsNoTracking()
+                            .Where(d => d.Id == cartHeader.Id)
+                            .ExecuteUpdateAsync(setters => setters.SetProperty(s => s.CouponCode, string.Empty), cancellationToken);
+            return true;
+        }
+
+        return false;
     }
 
     public async Task<bool> RemoveFromCartAsync(long cartDetailsId)

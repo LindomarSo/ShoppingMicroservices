@@ -1,6 +1,6 @@
 ﻿using GeekShopping.Web.Extensions;
-using GeekShopping.Web.Models;
 using GeekShopping.Web.Services.Interfaces;
+using GeekShopping.Web.ViewModels;
 using System.Net.Http.Headers;
 
 namespace GeekShopping.Web.Services;
@@ -15,11 +15,6 @@ public class CartService(HttpClient httpClient) : ICartService
         var response = await httpClient.PostAsJsonAsync($"{BasePath}/save-cart", cart);
 
         return await response.ReadContentAs<CartViewModel>();
-    }
-
-    public async Task<bool> ApplyCouponAsync(CartViewModel cart, string couponCode, string token)
-    {
-        throw new NotImplementedException();
     }
 
     public async Task<CartViewModel> CheckoutAsync(CartHeaderViewModel cart, string token)
@@ -40,9 +35,20 @@ public class CartService(HttpClient httpClient) : ICartService
         return await response.ReadContentAs<CartViewModel>();
     }
 
+    public async Task<bool> ApplyCouponAsync(CartViewModel cart, string token)
+    {
+        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        var response = await httpClient.PostAsJsonAsync($"{BasePath}/apply-coupon", cart);
+
+        return await response.ReadContentAs<bool>(); ;
+    }
+
     public async Task<bool> RemoveCouponAsync(string userId, string token)
     {
-        throw new NotImplementedException();
+        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        var response = await httpClient.DeleteAsync($"{BasePath}/remove-coupon/{userId}");
+
+        return await response.ReadContentAs<bool>(); ;
     }
 
     public async Task<bool> RemoveFromCartAsync(long cartId, string token)

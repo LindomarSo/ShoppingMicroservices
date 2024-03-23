@@ -1,6 +1,6 @@
 ﻿using GeekShopping.Web.Extensions;
-using GeekShopping.Web.Models;
 using GeekShopping.Web.Services.Interfaces;
+using GeekShopping.Web.ViewModels;
 using System.Net.Http.Headers;
 
 namespace GeekShopping.Web.Services;
