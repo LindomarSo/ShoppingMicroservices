@@ -15,41 +15,41 @@ public class ProductService : IProductService
         _httpClient = httpClient;
     }
 
-    public async Task<ProductModel?> Create(ProductModel product, string token)
+    public async Task<ProductViewModel?> Create(ProductViewModel product, string token)
     {
         _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
         var response = await _httpClient.PostAsJsonAsync($"{BasePath}/create", product);
 
-        return await response.ReadContentAs<ProductModel>();
+        return await response.ReadContentAs<ProductViewModel>();
     }
 
-    public async Task<ProductModel?> Update(ProductModel product, string token)
+    public async Task<ProductViewModel?> Update(ProductViewModel product, string token)
     {
         _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
         var response = await _httpClient.PutAsJsonAsync($"{BasePath}/update", product);
 
-        return await response.ReadContentAs<ProductModel>();
+        return await response.ReadContentAs<ProductViewModel>();
     }
 
-    public async Task<IEnumerable<ProductModel>> FindAll(string token)
+    public async Task<IEnumerable<ProductViewModel>> FindAll(string token)
     {
         _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
         var response = await _httpClient.GetAsync($"{BasePath}/find-all");
 
-        var content = await response.ReadContentAs<IEnumerable<ProductModel>>();
+        var content = await response.ReadContentAs<IEnumerable<ProductViewModel>>();
 
         if (content == null)
-            return Enumerable.Empty<ProductModel>();
+            return Enumerable.Empty<ProductViewModel>();
 
         return content;
     }
 
-    public async Task<ProductModel?> FindById(long productId, string token)
+    public async Task<ProductViewModel?> FindById(long productId, string token)
     {
         _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
         var response = await _httpClient.GetAsync($"{BasePath}/find-by-id/{productId}");
 
-        return await response.ReadContentAs<ProductModel>();
+        return await response.ReadContentAs<ProductViewModel>();
     }
 
     public async Task<bool> Delete(long productId, string token)

@@ -13,8 +13,7 @@ public class CartHeader : BaseEntity
     public string UserId { get; set; } = null!;
 
     [Column("coupon_code")]
-    [Required]
     [StringLength(150)]
-    public string CouponCode { get; set; } = null!;
+    public string? CouponCode { get; set; }
 
 }

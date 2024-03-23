@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Options;
-using Geek.IdentityServer.Pages;
 using Geek.IdentityServer.Pages.Consent;
 
 namespace Geek.IdentityServer.Pages.Device;

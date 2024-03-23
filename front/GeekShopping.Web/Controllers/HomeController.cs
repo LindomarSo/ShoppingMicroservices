@@ -1,13 +1,13 @@
-using System.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
 using GeekShopping.Web.Models;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authentication;
 using GeekShopping.Web.Services.Interfaces;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 
 namespace GeekShopping.Web.Controllers;
 
-public class HomeController(IProductService productService) : Controller
+public class HomeController(IProductService productService, ICartService cartService) : Controller
 {
     public async Task<IActionResult> Index()
     {
@@ -21,6 +21,46 @@ public class HomeController(IProductService productService) : Controller
     {
         var token = await HttpContext.GetTokenAsync("access_token");
         var product = await productService.FindById(id, token!);
+        return View(product);
+    }
+
+    [Authorize]
+    [HttpPost]
+    [ActionName("Details")]
+    public async Task<IActionResult> DetailsPost(ProductViewModel product)
+    {
+        string token = (await HttpContext.GetTokenAsync("access_token"))!;
+
+        CartViewModel cart = new()
+        {
+            CartHeader = new CartHeaderViewModel
+            {
+                UserId = User.Claims.First(x => x.Type == "sub").Value,
+            }
+        };
+
+        CartDetailViewModel cartDetail = new()
+        {
+            Count = product.Count,
+            ProductId = product.Id,
+            Product = await productService.FindById(product.Id, token),
+        };
+
+
+        var cartDetailList = new List<CartDetailViewModel>
+        {
+            cartDetail
+        };
+
+        cart.CartDetail = cartDetailList;
+
+        var response = await cartService.AddCartAsync(cart, token);
+
+        if(response != null)
+        {
+            return RedirectToAction(nameof(Index));
+        }
+
         return View(product);
     }
 

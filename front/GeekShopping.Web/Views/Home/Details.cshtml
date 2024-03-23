@@ -1,8 +1,8 @@
-﻿@model ProductModel
+﻿@model ProductViewModel
 
 <form method="post">
-   <input asp-for="Id"/>
-   <div class="pt-4">
+    <input asp-for="Id" />
+    <div class="pt-4">
         <div class="container card" style="border: 1px solid #808080">
             <div class="card-header text-light row" style="border-radius: 0px">
                 <div class="col-12 col-md-6">
@@ -14,7 +14,7 @@
             </div>
             <div class="card-body">
                 <div class="col-12 col-lg-4 p-1 text-center">
-                    <img src="@Model.ImageUrl" style="border-radius: 35px;" width="100%" class="rounded"/>
+                    <img src="@Model.ImageUrl" style="border-radius: 35px;" width="100%" class="rounded" />
                 </div>
                 <div class="col-12 col-lg-8">
                     <div class="row pl-3">
@@ -34,14 +34,14 @@
             </div>
             <div class="card-footer row">
                 <div class="col-12 col-md-6 pb-1">
-                    <a asp-action="ProductIndex" asp-controller="Product" class="btn btn-success btn-square btn-lg form-control" style="height:50px">Voltar a lista</a>
+                    <a asp-action="Index" asp-controller="Home" class="btn btn-success btn-square btn-lg form-control" style="height:50px">Voltar a lista</a>
                 </div>
                 <div class="col-12 col-md-6">
-                    <button type="submit" class="btn btn-primary form-control btn-lg" style="height:50px">Adicionar ao carrinho</button>
+                    <button asp-action="Details" asp-controller="Home" type="submit" class="btn btn-primary form-control btn-lg" style="height:50px">Adicionar ao carrinho</button>
                 </div>
             </div>
-       </div>
-   </div>
+        </div>
+    </div>
 </form>
 
 @section Scripts {

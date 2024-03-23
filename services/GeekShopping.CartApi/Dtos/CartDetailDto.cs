@@ -1,9 +1,8 @@
-﻿using GeekShopping.CartApi.Model.Base;
+﻿namespace GeekShopping.CartApi.Dtos;
 
-namespace GeekShopping.CartApi.Dtos;
-
-public class CartDetailDto : BaseEntity
+public class CartDetailDto
 {
+    public int Id { get; set; }
     public long CartHeaderId { get; set; }
     public long ProductId { get; set; }
     public int Count { get; set; }
