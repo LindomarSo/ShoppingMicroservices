@@ -67,6 +67,29 @@ public class CartController : Controller
     }
 
     [Authorize]
+    [HttpPost]
+    public async Task<IActionResult> Checkout(CartViewModel model, CancellationToken cancellation)
+    {
+        var token = await HttpContext.GetTokenAsync("access_token");
+
+        var response = await _cartService.CheckoutAsync(model.CartHeader, token!, cancellation);
+
+        if (response is not null)
+        {
+            return RedirectToAction(nameof(Confirmation));
+        }
+
+        return View(model);
+    }
+
+    [Authorize]
+    [HttpGet]
+    public IActionResult Confirmation()
+    {
+        return View();
+    }
+
+    [Authorize]
     public async Task<IActionResult> Remove(int id)
     {
         var token = await HttpContext.GetTokenAsync("access_token");

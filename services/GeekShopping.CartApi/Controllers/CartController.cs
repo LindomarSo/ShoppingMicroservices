@@ -1,4 +1,5 @@
 using GeekShopping.CartApi.Dtos;
+using GeekShopping.CartApi.Messages;
 using GeekShopping.CartApi.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -60,13 +61,25 @@ public class CartController(ICartRepository cartRepository) : ControllerBase
     }
 
     [HttpPost("checkout")]
-    public async Task<ActionResult<bool>> CheckoutAsync(CancellationToken cancellationToken)
+    public async Task<ActionResult<CheckoutHeaderDto>> CheckoutAsync(CheckoutHeaderDto checkout, CancellationToken cancellationToken)
     {
-        var status = await cartRepository.RemoveCouponAsync(userId, cancellationToken);
+        if(checkout?.UserId == null)
+        {
+            return BadRequest();
+        }
 
-        if (status)
-            return Ok(status);
+        var cart = await cartRepository.FindCartByUserIdAsync(checkout.UserId);
 
-        return NotFound();
+        if(cart is null)
+        {
+            return NotFound();
+        }
+
+        checkout.CartDetails = cart.CartDetail;
+        checkout.DateTime = DateTime.Now;
+
+        // TODO: RabbitMQ logic comes here
+
+        return Ok(checkout);
     }
 }

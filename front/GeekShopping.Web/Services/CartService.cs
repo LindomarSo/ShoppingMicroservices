@@ -17,9 +17,12 @@ public class CartService(HttpClient httpClient) : ICartService
         return await response.ReadContentAs<CartViewModel>();
     }
 
-    public async Task<CartViewModel> CheckoutAsync(CartHeaderViewModel cart, string token)
+    public async Task<CartHeaderViewModel> CheckoutAsync(CartHeaderViewModel cart, string token, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        var response = await httpClient.PostAsJsonAsync($"{BasePath}/checkout", cart, cancellationToken);
+
+        return (await response.ReadContentAs<CartHeaderViewModel>())!;
     }
 
     public async Task<bool> ClearCartAsync(string userId, string token)
