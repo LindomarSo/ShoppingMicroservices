@@ -1,10 +1,10 @@
 ﻿using GeekShopping.CartApi.Dtos;
+using GeekShopping.MessageBus;
 
 namespace GeekShopping.CartApi.Messages;
 
-public class CheckoutHeaderDto
+public class CheckoutHeaderDto : BaseMessage
 {
-    public int Id { get; set; }
     public string UserId { get; set; } = null!;
     public string CouponCode { get; set; } = null!;
     public decimal PurchaseAmount { get; set; }
