@@ -27,13 +27,27 @@ public class RabbitMQMessageSender : IRabbitMQMessageSender
             Password = _password,
             UserName = _userName,
         };
-
+        // Abrimos uma conexão com um nó RabbitMQ
         _connection = factory.CreateConnection();
-
+        /*
+            Criamos um canal onde vamos definir uma fila, uma mensagem e publicar a mensagem 
+            Cada operação realizada por um cliente é feita em um canal e um canal só existe no contexto de uma conexão se eu fechar a conexão todos os canais também 
+            serão fechados.
+         */
         using var channel = _connection.CreateModel();
-        channel.QueueDeclare(queueName, false, false, false, null);
+
+
+        channel.QueueDeclare(queueName, // Nome da fila
+                            durable: false, // Se igual a true a fila permanece ativa após o servidor ser reiniciado
+                            exclusive: false, // Se igual a true ela só pode ser acessada via conexão atual são excluídas ao fechar a conexão
+                            autoDelete: false, // Se igual a true será deletada automaticamente após os consumidores usar a fila
+                            arguments: null // 
+                            );
+
+
         byte[] body = GetBytes(message);
 
+        // Publicamos a mensagem informando a fila e o corpo da mensagem
         channel.BasicPublish(exchange: string.Empty, routingKey: queueName, basicProperties: null, body: body);
     }
 

@@ -10,3 +10,4 @@ RabbitMQ
 	8. Pode ser configurado para redirecionar mensagens através das exchanges antes de serem armazenadas em uma fila. Por causa disso podemos criar routings diferentes e trabalhar com facilidades cenários de roteamento complexos
 	9. Além disso, possui uma interface de usuário acessível via browser, que permite gerenciar usuários e suas permissões, exchanges, filas entre outras coisas. 
 	10. RabbitMQ é um sistema CROSS PLATAFORM,
+	11. O RabbitMQ pode ajudar as aplicações a escalar o seu processamento através do processamento assíncrono de mensagens
